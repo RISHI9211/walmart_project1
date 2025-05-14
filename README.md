@@ -68,7 +68,30 @@ select
      group by 1,2;
 ***
      - Identifying best-selling product categories.
+***sql
+select
+     category,
+     sum(total) as total_revenue,
+     sum(total*profit_margin) as total_profit
+     from walmart
+     group by 1
+     order by 2 desc;
+***
      - Sales performance by time, city, and payment method.
+***sql
+with cte
+as(
+select 
+     branch,
+     payment_method,
+     count(*) as total_trans,
+     rank() over(partition by branch order by count(*) desc) as rnk
+     from walmart
+     group by 1,2
+)
+select *from cte
+where rnk=1;
+***
      - Analyzing peak sales periods and customer buying patterns.
      - Profit margin analysis by branch and category.
    - **Documentation**: Keep clear notes of each query's objective, approach, and results.
